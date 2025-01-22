@@ -1,7 +1,7 @@
 // 获取中文名字建议
 async function generateChineseNames(englishName) {
     try {
-        const response = await fetch('https://api.codeium.com/chinese-name-generator/generate', {
+        const response = await fetch('/api/generate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
