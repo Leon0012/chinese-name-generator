@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Name Generator</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chinese Name Generator</h1>
+            <p>Generate your unique Chinese name with cultural meaning</p>
+        </header>
+        
+        <main>
+            <div class="input-section">
+                <div class="input-group">
+                    <input type="text" 
+                           id="englishName" 
+                           placeholder="Enter your English name"
+                           autocomplete="off"
+                           spellcheck="false">
+                    <button onclick="generateNames()">Generate Names</button>
+                </div>
+            </div>
+
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Generating your Chinese names...</p>
+            </div>
+
+            <div id="results" class="results hidden">
+                <h2>Suggested Chinese Names</h2>
+                <div id="namesList" class="names-list"></div>
+            </div>
+
+            <div id="error" class="error hidden">
+                <p>Sorry, something went wrong. Please try again.</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>Created with ❤️ to bridge cultural understanding</p>
+        </footer>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        async function generateNames() {
+            const englishName = document.getElementById('englishName').value.trim();
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const error = document.getElementById('error');
+            const namesList = document.getElementById('namesList');
+
+            if (!englishName) {
+                alert('Please enter your name');
+                return;
+            }
+
+            loading.classList.remove('hidden');
+            results.classList.add('hidden');
+            error.classList.add('hidden');
+            namesList.innerHTML = '';
+
+            try {
+                const names = await generateChineseNames(englishName);
+                
+                namesList.innerHTML = names
+                    .map(name => `<div class="name-card">${name}</div>`)
+                    .join('');
+                
+                results.classList.remove('hidden');
+            } catch (err) {
+                console.error('Error:', err);
+                error.classList.remove('hidden');
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+
+        // 添加回车键支持
+        document.getElementById('englishName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateNames();
+            }
+        });
+    </script>
+</body>
+</html>
