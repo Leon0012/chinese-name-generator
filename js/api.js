@@ -1,4 +1,5 @@
 // OpenAI API 配置
+const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
 const OPENAI_API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
 const OPENAI_API_KEY = atob('c2stVDVVTHZFdUF0SWtsOHkwalV3NVdUM0JsYmtGSmFTYVFNbmJYaUYwZ0RCS1cxdmxz');
 
@@ -12,11 +13,12 @@ async function generateChineseNames(englishName) {
             4. 响应格式：每个名字占一行，后面用括号说明含义，例如：
             张伟明（伟大光明，寓意远大前程）`;
 
-        const response = await fetch(OPENAI_API_ENDPOINT, {
+        const response = await fetch(CORS_PROXY + OPENAI_API_ENDPOINT, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${OPENAI_API_KEY}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Origin': window.location.origin
             },
             body: JSON.stringify({
                 model: 'gpt-3.5-turbo',
@@ -43,6 +45,7 @@ async function generateChineseNames(englishName) {
         return data.choices[0].message.content.trim().split('\n');
     } catch (error) {
         console.error('Error:', error);
+        document.getElementById('error-message').textContent = '生成名字时出错：' + error.message;
         throw error;
     }
 }

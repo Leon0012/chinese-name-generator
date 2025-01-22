@@ -181,6 +181,20 @@ button:hover {
     margin: 1rem 0;
 }
 
+.error-message {
+    color: #d32f2f;
+    background-color: #ffebee;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    text-align: center;
+    display: none;
+}
+
+.error-message:not(:empty) {
+    display: block;
+}
+
 /* Disabled button state */
 button:disabled {
     background-color: #bdc3c7;

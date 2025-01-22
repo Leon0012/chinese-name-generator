@@ -55,6 +55,21 @@ Each recommended name includes:
 2. Enter an English name
 3. Get personalized Chinese name recommendations
 
+## Deployment
+1. Install Vercel CLI:
+   ```bash
+   npm install -g vercel
+   ```
+2. Login to Vercel:
+   ```bash
+   vercel login
+   ```
+3. Deploy the project:
+   ```bash
+   vercel --prod
+   ```
+4. Set the environment variable `OPENAI_API_KEY` in the Vercel dashboard.
+
 ## Example
 Input: "Michael"
 Output:
