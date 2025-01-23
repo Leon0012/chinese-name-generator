@@ -10,6 +10,13 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .input-group {
             margin-bottom: 20px;
@@ -18,82 +25,110 @@
             padding: 10px;
             font-size: 16px;
             width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
         }
         button {
             padding: 10px 20px;
             font-size: 16px;
-            background-color: #007bff;
+            background-color: #28a745;
             color: white;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.2s;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #218838;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
         }
         #result {
             margin-top: 20px;
             font-size: 18px;
+            padding: 15px;
+            border-radius: 4px;
         }
         .error {
-            color: red;
-            margin-top: 10px;
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .loading {
+            color: #0056b3;
+        }
+        .success {
+            color: #28a745;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
         }
     </style>
 </head>
 <body>
-    <h1>中文名字生成器</h1>
-    <div class="input-group">
-        <input type="text" id="englishName" placeholder="Enter your English name">
-        <button onclick="generateName()">生成名字</button>
+    <div class="container">
+        <h1>中文名字生成器</h1>
+        <div class="input-group">
+            <input type="text" id="englishName" placeholder="输入英文名">
+            <button onclick="generateName()" id="generateBtn">生成名字</button>
+        </div>
+        <div id="result"></div>
     </div>
-    <div id="result"></div>
 
     <script>
-        // API 基础 URL - 根据实际部署环境选择
-        const API_URLS = [
-            'https://chinese-name-generator-1-1767981-1317344511.sh.run.tcloudbase.com',
-            'https://chinese-name-generator-leon0012.webify.cloudbase.net'
-        ];
+        const API_URL = 'https://chinese-name-generator-1-1767981-1317344511.sh.run.tcloudbase.com/generate';
+        const generateBtn = document.getElementById('generateBtn');
+        const resultDiv = document.getElementById('result');
 
         async function generateName() {
-            const englishName = document.getElementById('englishName').value;
+            const englishName = document.getElementById('englishName').value.trim();
             if (!englishName) {
-                alert('Please enter your English name');
+                resultDiv.textContent = '请输入英文名';
+                resultDiv.className = 'error';
                 return;
             }
 
-            const resultDiv = document.getElementById('result');
-            resultDiv.textContent = '生成中...';
-            resultDiv.className = '';
+            // 禁用按钮并显示加载状态
+            generateBtn.disabled = true;
+            resultDiv.textContent = '正在生成名字...';
+            resultDiv.className = 'loading';
 
-            // 尝试所有可能的 API URL
-            for (const baseUrl of API_URLS) {
-                try {
-                    const response = await fetch(`${baseUrl}/generate`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ name: englishName })
-                    });
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name: englishName })
+                });
 
-                    if (!response.ok) {
-                        continue; // 尝试下一个 URL
-                    }
-
-                    const data = await response.json();
-                    resultDiv.textContent = `您的中文名字: ${data.chineseName}`;
-                    return; // 成功后退出
-                } catch (error) {
-                    console.error(`Error with ${baseUrl}:`, error);
-                    // 继续尝试下一个 URL
+                if (!response.ok) {
+                    throw new Error('API request failed');
                 }
-            }
 
-            // 如果所有 URL 都失败
-            resultDiv.textContent = '生成名字时出错，请重试。';
-            resultDiv.className = 'error';
+                const data = await response.json();
+                resultDiv.textContent = `您的中文名字: ${data.chineseName}`;
+                resultDiv.className = 'success';
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.textContent = '生成名字时出错，请重试';
+                resultDiv.className = 'error';
+            } finally {
+                // 恢复按钮状态
+                generateBtn.disabled = false;
+            }
         }
+
+        // 添加回车键支持
+        document.getElementById('englishName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !generateBtn.disabled) {
+                generateName();
+            }
+        });
     </script>
 </body>
 </html>
