@@ -80,10 +80,6 @@
     </div>
 
     <script>
-        const API_URL = 'https://chinese-name-generator-1-1767981-1317344511.sh.run.tcloudbase.com/generate';
-        const generateBtn = document.getElementById('generateBtn');
-        const resultDiv = document.getElementById('result');
-
         async function generateName() {
             const englishName = document.getElementById('englishName').value.trim();
             if (!englishName) {
@@ -98,7 +94,8 @@
             resultDiv.className = 'loading';
 
             try {
-                const response = await fetch(API_URL, {
+                // 直接使用相对路径，因为我们是静态网站
+                const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -122,6 +119,10 @@
                 generateBtn.disabled = false;
             }
         }
+
+        // 获取常用的 DOM 元素
+        const generateBtn = document.getElementById('generateBtn');
+        const resultDiv = document.getElementById('result');
 
         // 添加回车键支持
         document.getElementById('englishName').addEventListener('keypress', function(e) {
