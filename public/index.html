@@ -49,8 +49,11 @@
     <div id="result"></div>
 
     <script>
-        // API 基础 URL
-        const API_BASE_URL = 'https://chinese-name-generator-1-1767981-1317344511.sh.run.tcloudbase.com';
+        // API 基础 URL - 根据实际部署环境选择
+        const API_URLS = [
+            'https://chinese-name-generator-1-1767981-1317344511.sh.run.tcloudbase.com',
+            'https://chinese-name-generator-leon0012.webify.cloudbase.net'
+        ];
 
         async function generateName() {
             const englishName = document.getElementById('englishName').value;
@@ -63,26 +66,33 @@
             resultDiv.textContent = '生成中...';
             resultDiv.className = '';
 
-            try {
-                const response = await fetch(`${API_BASE_URL}/generate`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ name: englishName })
-                });
+            // 尝试所有可能的 API URL
+            for (const baseUrl of API_URLS) {
+                try {
+                    const response = await fetch(`${baseUrl}/generate`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ name: englishName })
+                    });
 
-                if (!response.ok) {
-                    throw new Error('API request failed');
+                    if (!response.ok) {
+                        continue; // 尝试下一个 URL
+                    }
+
+                    const data = await response.json();
+                    resultDiv.textContent = `您的中文名字: ${data.chineseName}`;
+                    return; // 成功后退出
+                } catch (error) {
+                    console.error(`Error with ${baseUrl}:`, error);
+                    // 继续尝试下一个 URL
                 }
-
-                const data = await response.json();
-                resultDiv.textContent = `您的中文名字: ${data.chineseName}`;
-            } catch (error) {
-                console.error('Error:', error);
-                resultDiv.textContent = '生成名字时出错，请重试。';
-                resultDiv.className = 'error';
             }
+
+            // 如果所有 URL 都失败
+            resultDiv.textContent = '生成名字时出错，请重试。';
+            resultDiv.className = 'error';
         }
     </script>
 </body>

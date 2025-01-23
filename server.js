@@ -34,8 +34,18 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-// 中间件
-app.use(cors());
+// CORS 配置
+const corsOptions = {
+    origin: [
+        'https://chinese-name-generator-1-1767981-1317344511.sh.run.tcloudbase.com',
+        'https://chinese-name-generator-leon0012.webify.cloudbase.net'
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public'))); // 添加静态文件服务
 app.use(express.static(path.join(__dirname)));
