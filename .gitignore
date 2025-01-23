@@ -1,8 +1,10 @@
+*.msi
 node_modules/
-.env
-config.js
 __pycache__/
 *.pyc
-*.log
+*.pyo
+*.pyd
+.env
 .DS_Store
-*.msi
+.vscode/
+*.log
