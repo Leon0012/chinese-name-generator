@@ -1,17 +1,12 @@
 {
-  "envId": "default",
   "version": "1.0.0",
   "framework": {
-    "name": "custom"
+    "name": "nodejs"
   },
   "name": "chinese-name-generator",
-  "buildCommand": "",
-  "installCommand": "npm install --production",
-  "startCommand": "npm start",
-  "outputPath": ".",
+  "startCommand": "node server.js",
   "env": {
     "PORT": "80",
     "NODE_ENV": "production"
-  },
-  "region": "ap-shanghai"
+  }
 }
