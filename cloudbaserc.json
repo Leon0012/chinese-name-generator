@@ -1,20 +1,24 @@
 {
-  "envId": "{{envId}}",
+  "envId": "genname-9g8qxaxie1915f5b",
   "version": "2.0",
   "$schema": "https://framework-1258016615.tcloudbaseapp.com/schema/latest.json",
   "functionRoot": "./functions",
   "functions": [],
   "framework": {
-    "name": "genname",
+    "name": "chinese-name-generator",
     "plugins": {
       "client": {
         "use": "@cloudbase/framework-plugin-node",
         "inputs": {
-          "name": "genname",
+          "name": "chinese-name-generator",
           "path": "/",
           "entry": "server.js",
           "buildCommand": "npm install",
-          "installCommand": "npm install"
+          "installCommand": "npm install",
+          "env": {
+            "PORT": "80",
+            "NODE_ENV": "production"
+          }
         }
       }
     }
