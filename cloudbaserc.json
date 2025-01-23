@@ -5,7 +5,7 @@
   "functionRoot": "./functions",
   "functions": [],
   "framework": {
-    "name": "custom",
+    "name": "nodejs",
     "plugins": {
       "client": {
         "use": "@cloudbase/framework-plugin-node",
@@ -13,8 +13,8 @@
           "name": "chinese-name-generator",
           "path": "/",
           "entry": "server.js",
-          "buildCommand": "npm ci",
-          "installCommand": "npm ci",
+          "buildCommand": "",
+          "installCommand": "npm install --production",
           "env": {
             "PORT": "80",
             "NODE_ENV": "production"
