@@ -1,0 +1,20 @@
+{
+  "envId": "default",
+  "version": "1.0.0",
+  "framework": {
+    "name": "nodejs",
+    "version": "16.x"
+  },
+  "name": "chinese-name-generator",
+  "buildCommand": "npm install",
+  "startCommand": "node server.js",
+  "env": {
+    "PORT": "80"
+  },
+  "region": "ap-shanghai",
+  "cache": {
+    "paths": [
+      "node_modules/**"
+    ]
+  }
+}
