@@ -37,6 +37,7 @@ const openai = new OpenAIApi(configuration);
 // 中间件
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public'))); // 添加静态文件服务
 app.use(express.static(path.join(__dirname)));
 
 // API 路由

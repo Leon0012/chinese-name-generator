@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Name Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chinese Name Generator</h1>
+    <div class="input-group">
+        <input type="text" id="englishName" placeholder="Enter your English name">
+        <button onclick="generateName()">Generate Chinese Name</button>
+    </div>
+    <div id="result"></div>
+
+    <script>
+        async function generateName() {
+            const englishName = document.getElementById('englishName').value;
+            if (!englishName) {
+                alert('Please enter your English name');
+                return;
+            }
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name: englishName })
+                });
+
+                const data = await response.json();
+                document.getElementById('result').textContent = `Your Chinese name: ${data.chineseName}`;
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to generate name. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
