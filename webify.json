@@ -5,28 +5,13 @@
     "name": "custom"
   },
   "name": "chinese-name-generator",
-  "buildCommand": "npm run build",
+  "buildCommand": "",
+  "installCommand": "npm install --production",
   "startCommand": "npm start",
   "outputPath": ".",
   "env": {
     "PORT": "80",
     "NODE_ENV": "production"
   },
-  "region": "ap-shanghai",
-  "cache": {
-    "paths": [
-      "node_modules/**"
-    ]
-  },
-  "ignoreFiles": [
-    "*.msi",
-    "*.pyc",
-    "*.pyo",
-    "*.pyd",
-    ".git/**",
-    ".env",
-    "__pycache__/**",
-    "*.log",
-    "config.js"
-  ]
+  "region": "ap-shanghai"
 }
