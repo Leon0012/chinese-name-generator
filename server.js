@@ -3,20 +3,29 @@ const cors = require('cors');
 const { Configuration, OpenAIApi } = require('openai');
 const path = require('path');
 
-let config;
-try {
-    config = require('./config');
-} catch (error) {
-    console.error('请创建 config.js 文件，参考 config.example.js 的格式');
-    process.exit(1);
+// 优先使用环境变量，如果没有则尝试从配置文件加载
+const config = {
+    PORT: process.env.PORT || 3000,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY
+};
+
+// 如果环境变量中没有API密钥，尝试从配置文件加载
+if (!config.OPENAI_API_KEY) {
+    try {
+        const fileConfig = require('./config');
+        config.OPENAI_API_KEY = fileConfig.OPENAI_API_KEY;
+    } catch (error) {
+        console.error('未找到 OPENAI_API_KEY，请在环境变量或 config.js 中设置');
+        process.exit(1);
+    }
 }
 
 const app = express();
-const port = config.PORT || 3000;
+const port = config.PORT;
 
 // 检查必要的配置
 if (!config.OPENAI_API_KEY) {
-    console.error('错误: 请在 config.js 中设置 OPENAI_API_KEY');
+    console.error('错误: 请在环境变量或 config.js 中设置 OPENAI_API_KEY');
     process.exit(1);
 }
 

@@ -2,28 +2,32 @@
   "envId": "default",
   "version": "1.0.0",
   "framework": {
-    "name": "custom",
-    "version": "1.0.0"
+    "name": "nodejs",
+    "version": "16.x"
   },
   "name": "chinese-name-generator",
-  "buildCommand": "npm install && pip install -r requirements.txt",
+  "buildCommand": "npm install",
   "startCommand": "node server.js",
+  "outputPath": ".",
   "env": {
     "PORT": "80",
-    "PYTHON_PATH": "python3"
+    "NODE_ENV": "production"
   },
   "region": "ap-shanghai",
   "cache": {
     "paths": [
-      "node_modules/**",
-      "__pycache__/**"
+      "node_modules/**"
     ]
   },
   "ignoreFiles": [
+    "*.msi",
     "*.pyc",
     "*.pyo",
     "*.pyd",
     ".git/**",
-    ".env"
+    ".env",
+    "__pycache__/**",
+    "*.log",
+    "config.js"
   ]
 }
