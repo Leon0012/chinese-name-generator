@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中文名字生成器</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .loading {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .name-card {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .error-message {
+            color: #f44336;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>中文名字生成器</h1>
+        <p class="subtitle">输入您的英文名，我们将为您生成匹配的中文名字建议。</p>
+        
+        <div class="input-container">
+            <input type="text" 
+                   id="englishName" 
+                   placeholder="输入英文名"
+                   autocomplete="off"
+                   spellcheck="false">
+            <button onclick="generateName()">生成名字</button>
+        </div>
+
+        <div class="results-container">
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>正在生成名字，请稍候...</p>
+            </div>
+            
+            <div id="results" class="results">
+                <h2 id="suggestionsTitle" style="display: none;">建议的中文名字</h2>
+                <div id="namesList" class="names-list"></div>
+            </div>
+            
+            <div id="error-message" class="error-message"></div>
+        </div>
+    </div>
+
+    <script>
+        async function generateName() {
+            const englishName = document.getElementById('englishName').value.trim();
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const suggestionsTitle = document.getElementById('suggestionsTitle');
+            const namesList = document.getElementById('namesList');
+            const errorMessage = document.getElementById('error-message');
+
+            if (!englishName) {
+                errorMessage.textContent = '请输入英文名字';
+                return;
+            }
+
+            loading.style.display = 'flex';
+            results.style.display = 'none';
+            errorMessage.textContent = '';
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: englishName })
+                });
+
+                if (!response.ok) {
+                    throw new Error('生成名字时出错');
+                }
+
+                const data = await response.json();
+                const suggestions = data.suggestions;
+                
+                namesList.innerHTML = suggestions
+                    .map(name => `<div class="name-card">${name}</div>`)
+                    .join('');
+
+                suggestionsTitle.style.display = 'block';
+                results.style.display = 'block';
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.textContent = '生成名字时出错：' + error.message;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // 添加回车键支持
+        document.getElementById('englishName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateName();
+            }
+        });
+    </script>
+</body>
+</html>
