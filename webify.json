@@ -6,7 +6,7 @@
   "name": "chinese-name-generator",
   "buildCommand": "npm run build",
   "installCommand": "npm install",
-  "outputPath": ".",
+  "outputPath": "dist",
   "env": {
     "PORT": "80",
     "NODE_ENV": "production"

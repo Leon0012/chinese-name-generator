@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "cp -r public/* ."
+    "build": "mkdir dist 2>nul & xcopy /E /I /Y public dist\\"
   },
   "engines": {
     "node": ">=16.0.0"
