@@ -7,7 +7,7 @@
   "name": "chinese-name-generator",
   "installCommand": "npm install",
   "buildCommand": "",
-  "startCommand": "node server.js",
+  "startCommand": "npm start",
   "outputPath": ".",
   "env": {
     "PORT": "80",
