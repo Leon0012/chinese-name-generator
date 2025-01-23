@@ -1,21 +1,30 @@
 const express = require('express');
 const cors = require('cors');
-const { OpenAI } = require('openai');
+const { Configuration, OpenAIApi } = require('openai');
 const path = require('path');
 
-const app = express();
-const port = process.env.PORT || 3000;
-
-// 检查必要的环境变量
-if (!process.env.OPENAI_API_KEY) {
-    console.error('错误: 缺少 OPENAI_API_KEY 环境变量');
+let config;
+try {
+    config = require('./config');
+} catch (error) {
+    console.error('请创建 config.js 文件，参考 config.example.js 的格式');
     process.exit(1);
 }
 
-// 配置 OpenAI
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
+const app = express();
+const port = config.PORT || 3000;
+
+// 检查必要的配置
+if (!config.OPENAI_API_KEY) {
+    console.error('错误: 请在 config.js 中设置 OPENAI_API_KEY');
+    process.exit(1);
+}
+
+// 创建 OpenAI 配置
+const configuration = new Configuration({
+    apiKey: config.OPENAI_API_KEY,
 });
+const openai = new OpenAIApi(configuration);
 
 // 中间件
 app.use(cors());
@@ -38,7 +47,7 @@ app.post('/api/generate', async (req, res) => {
             4. 响应格式：每个名字占一行，后面用括号说明含义，例如：
             张伟明（伟大光明，寓意远大前程）`;
 
-        const completion = await openai.chat.completions.create({
+        const completion = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: [
                 {

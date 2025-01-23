@@ -9,6 +9,8 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host "Node.js 未安装，正在安装..." -ForegroundColor Yellow
     # 运行 Node.js 安装脚本
     & "$PSScriptRoot\install_nodejs.ps1"
+} else {
+    Write-Host "Node.js 版本: $nodeVersion" -ForegroundColor Green
 }
 
 # 安装 Vercel CLI
