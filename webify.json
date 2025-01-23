@@ -2,12 +2,12 @@
   "envId": "default",
   "version": "1.0.0",
   "framework": {
-    "name": "custom",
-    "version": "1.0.0"
+    "name": "custom"
   },
   "name": "chinese-name-generator",
-  "buildCommand": "npm ci",
-  "startCommand": "npm start",
+  "installCommand": "npm install",
+  "buildCommand": "",
+  "startCommand": "node server.js",
   "outputPath": ".",
   "env": {
     "PORT": "80",
