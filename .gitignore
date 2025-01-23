@@ -9,3 +9,4 @@ __pycache__/
 .vscode/
 *.log
 config.js
+utils/generate-config.js

@@ -2,30 +2,29 @@ const express = require('express');
 const cors = require('cors');
 const { Configuration, OpenAIApi } = require('openai');
 const path = require('path');
+const { decrypt } = require('./utils/crypto');
 
-// 优先使用环境变量，如果没有则尝试从配置文件加载
+// 加载加密的配置
+let encryptedConfig;
+try {
+    encryptedConfig = require('./config.encrypted');
+} catch (error) {
+    console.error('未找到加密配置文件');
+    process.exit(1);
+}
+
+// 解密配置
 const config = {
     PORT: process.env.PORT || 3000,
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY || decrypt(encryptedConfig.OPENAI_API_KEY)
 };
-
-// 如果环境变量中没有API密钥，尝试从配置文件加载
-if (!config.OPENAI_API_KEY) {
-    try {
-        const fileConfig = require('./config');
-        config.OPENAI_API_KEY = fileConfig.OPENAI_API_KEY;
-    } catch (error) {
-        console.error('未找到 OPENAI_API_KEY，请在环境变量或 config.js 中设置');
-        process.exit(1);
-    }
-}
 
 const app = express();
 const port = config.PORT;
 
 // 检查必要的配置
 if (!config.OPENAI_API_KEY) {
-    console.error('错误: 请在环境变量或 config.js 中设置 OPENAI_API_KEY');
+    console.error('错误: 请在环境变量或 config.encrypted.js 中设置 OPENAI_API_KEY');
     process.exit(1);
 }
 

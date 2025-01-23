@@ -1,0 +1,4 @@
+// 加密后的配置
+module.exports = {
+    OPENAI_API_KEY: '75876f841254c8d011d11f06ea6864fd:a203ed841ef8179e2af8743e0417c4167bed854c02af8944250d9e7fcd689aae9284a72ba4f7c4f77ac1a68bf0cbaf4681aca5d975814bf77a18cc650cf79ae9'
+};
