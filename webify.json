@@ -1,24 +1,13 @@
 {
   "version": "1.0.0",
   "framework": {
-    "name": "custom"
+    "name": "nodejs"
   },
   "name": "chinese-name-generator",
-  "buildCommand": "",
   "installCommand": "npm install",
-  "outputPath": ".",
+  "startCommand": "node server.js",
   "env": {
     "PORT": "80",
     "NODE_ENV": "production"
-  },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "https://chinese-name-generator-1-1767981-1317344511.sh.run.tcloudbase.com/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ]
+  }
 }
