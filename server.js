@@ -2,7 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const { Configuration, OpenAIApi } = require('openai');
 const path = require('path');
-const { decrypt } = require('./utils/crypto');
+
+const app = express();
+const port = process.env.PORT || 3000;
 
 // 加载加密的配置
 let encryptedConfig;
@@ -15,12 +17,8 @@ try {
 
 // 解密配置
 const config = {
-    PORT: process.env.PORT || 3000,
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY || decrypt(encryptedConfig.OPENAI_API_KEY)
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY || require('./utils/crypto').decrypt(encryptedConfig.OPENAI_API_KEY)
 };
-
-const app = express();
-const port = config.PORT;
 
 // 检查必要的配置
 if (!config.OPENAI_API_KEY) {
@@ -51,47 +49,49 @@ app.use(express.static(path.join(__dirname, 'public'))); // 添加静态文件�
 app.use(express.static(path.join(__dirname)));
 
 // API 路由
-app.post('/api/generate', async (req, res) => {
+app.post('/generate', async (req, res) => {
     try {
         const { name } = req.body;
-
+        
         if (!name) {
-            return res.status(400).json({ error: '请提供英文名字' });
+            return res.status(400).json({ error: '请提供英文名' });
         }
 
-        const prompt = `请为名字"${name}"生成3个中文名字建议。要求：
-            1. 名字要朗朗上口，符合中国人的起名习惯
-            2. 每个字都要有具体寓意
-            3. 字的组合要和谐
-            4. 响应格式：每个名字占一行，后面用括号说明含义，例如：
-            张伟明（伟大光明，寓意远大前程）`;
-
-        const completion = await openai.createChatCompletion({
+        // 调用 OpenAI API
+        const response = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: [
                 {
                     role: "system",
-                    content: "你是一个专业的中文起名专家，精通中国传统文化和起名学问。"
+                    content: "你是一个专业的中文起名专家。请根据用户提供的英文名，生成一个发音相近、寓意优美的中文名字。"
                 },
                 {
                     role: "user",
-                    content: prompt
+                    content: `请为英文名 "${name}" 生成一个中文名字，只需要返回中文名字即可，不要其他解释。`
                 }
             ],
             temperature: 0.7,
-            max_tokens: 500
+            max_tokens: 50
         });
 
-        const suggestions = completion.choices[0].message.content.trim().split('\n');
+        // 获取生成的中文名
+        const chineseName = response.data.choices[0].message.content.trim();
 
-        res.json({ suggestions });
+        // 返回结果
+        res.json({ chineseName });
+
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: '生成名字时出错' });
     }
 });
 
+// 处理所有其他路由，返回 index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // 启动服务器
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`服务器运行在 http://localhost:${port}`);
 });

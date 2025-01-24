@@ -1,0 +1,9 @@
+{
+  "name": "generate-chinese-name",
+  "version": "1.0.0",
+  "description": "Generate Chinese names from English names using OpenAI",
+  "main": "index.js",
+  "dependencies": {
+    "openai": "^3.2.1"
+  }
+}

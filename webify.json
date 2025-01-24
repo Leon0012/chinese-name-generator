@@ -1,13 +1,8 @@
 {
   "version": "1.0.0",
   "framework": {
-    "name": "nodejs"
+    "name": "custom"
   },
   "name": "chinese-name-generator",
-  "installCommand": "npm install",
-  "startCommand": "node server.js",
-  "env": {
-    "PORT": "80",
-    "NODE_ENV": "production"
-  }
+  "outputPath": "public"
 }
